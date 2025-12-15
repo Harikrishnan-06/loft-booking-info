@@ -6,7 +6,7 @@
 
 <style>
 body{
-  font-family:Montserrat,Arial;
+  font-family: Montserrat, Arial;
   background:#020617;
   color:white;
   margin:0;
@@ -62,6 +62,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebas
 import { getFirestore, collection, onSnapshot, doc, updateDoc }
 from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
+/* 🔹 Firebase Config */
 const firebaseConfig = {
   apiKey: "AIzaSyCHzOsZpSWN7fwEXALbPzPsknjROPp5Bf4",
   authDomain: "the-loft-hub.firebaseapp.com",
@@ -71,11 +72,17 @@ const firebaseConfig = {
   appId: "1:720306031954:web:1f242a6e1531fe58587e8b"
 };
 
+/* 🔹 Initialize Firebase */
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+/* 🔥 IMPORTANT: Explicit DOM reference for ES modules */
+const list = document.getElementById("list");
+
+/* 🔹 Real-time listener */
 onSnapshot(collection(db,"bookings"), snap => {
   list.innerHTML = "";
+
   snap.forEach(d => {
     const b = d.data();
 
@@ -93,20 +100,22 @@ onSnapshot(collection(db,"bookings"), snap => {
           🕒 Requested On: ${requestedTime}
         </div>
 
-        <textarea id="n-${d.id}" placeholder="Internal Notes">${b.staffNotes || ""}</textarea>
-        <br>
-        <button class="approve" onclick="updateStatus('${d.id}','Approved')">Approve</button>
-        <button class="reject" onclick="updateStatus('${d.id}','Rejected')">Reject</button>
+        <textarea id="n-${d.id}" placeholder="Internal Notes">
+${b.staffNotes || ""}
+        </textarea>
+
+        <button class="approve"
+          onclick="updateStatus('${d.id}','Approved')">
+          Approve
+        </button>
+
+        <button class="reject"
+          onclick="updateStatus('${d.id}','Rejected')">
+          Reject
+        </button>
       </div>`;
   });
 });
 
-window.updateStatus = async (id, status) => {
-  await updateDoc(doc(db,"bookings", id), {
-    status: status,
-    staffNotes: document.getElementById(`n-${id}`).value
-  });
-};
-</script>
-</body>
-</html>
+/* 🔹 Update booking status */
+window.updateStatus = async
