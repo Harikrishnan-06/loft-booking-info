@@ -79,7 +79,8 @@ onSnapshot(collection(db,"bookings"),snap=>{
       <div class="card">
         <b>${b.name}</b> | ${b.eventType}<br>
         Date: ${b.date} | Guests: ${b.guests}<br>
-        Status: <b>${b.status}</b>
+        Status: <b>${b.status}</b><br>
+🕒 Requested On: ${b.createdAt ? b.createdAt.toDate().toLocaleString() : "Loading..."}
         <textarea id="n-${d.id}" placeholder="Internal Notes">${b.staffNotes||""}</textarea>
         <br>
         <button class="approve" onclick="updateStatus('${d.id}','Approved')">Approve</button>
